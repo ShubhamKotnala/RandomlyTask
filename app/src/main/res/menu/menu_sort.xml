@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/grp"
+        android:title="Sort By"
+        app:showAsAction="never">
+
+            <group
+                android:id="@+id/group_2"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_date"
+                    android:orderInCategory="100"
+                    android:title="Date"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_like"
+                    android:orderInCategory="200"
+                    android:title="Likes"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_share"
+                    android:orderInCategory="200"
+                    android:title="Share"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_views"
+                    android:orderInCategory="200"
+                    android:title="Views"
+                    app:showAsAction="never" />
+
+            </group>
+
+    </item>
+</menu>

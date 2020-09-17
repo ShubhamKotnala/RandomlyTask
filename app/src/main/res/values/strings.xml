@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Randomly Task</string>
+    <string name="permission_denied_explanation">Location permission has been denied</string>
+    <string name="settings">Setting</string>
+    <string name="title_main">Feeds</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_data_found">No Data Found</string>
+    <string name="connected">Connected</string>
+    <string name="you_are_offline">You are offline</string>
+    <string name="likes">Likes</string>
+    <string name="shares">Shares</string>
+    <string name="views">Views</string>
+</resources>

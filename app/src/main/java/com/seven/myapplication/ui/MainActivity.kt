@@ -19,7 +19,6 @@ import com.seven.myapplication.utils.Utils
 import com.seven.myapplication.viewmodel.MainViewModel
 import com.yarolegovich.lovelydialog.LovelyChoiceDialog
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
@@ -101,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             .setIcon(R.drawable.ic_sort)
             .setItems(list
             ) { _, item ->
-                if(listPosts.isEmpty()) return@setItems
+                if (listPosts.isEmpty()) return@setItems
                 listPosts = viewModel.sortData(item, listPosts)
                 postsAdapter.setData(listPosts)
             }

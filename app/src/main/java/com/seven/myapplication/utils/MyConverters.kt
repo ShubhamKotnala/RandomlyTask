@@ -11,10 +11,8 @@ class MyConverters  {
         if (optionValues == null) {
             return null
         }
-        val gson = Gson()
-        val type =
-            object : TypeToken<List<Posts?>?>() {}.type
-        return gson.toJson(optionValues, type)
+        val type = object : TypeToken<List<Posts?>?>() {}.type
+        return  Gson().toJson(optionValues, type)
     }
 
     @TypeConverter
@@ -22,9 +20,7 @@ class MyConverters  {
         if (optionValuesString == null) {
             return null
         }
-        val gson = Gson()
-        val type =
-            object : TypeToken<List<Posts?>?>() {}.type
-        return gson.fromJson<List<Posts>>(optionValuesString, type)
+        val type = object : TypeToken<List<Posts?>?>() {}.type
+        return  Gson().fromJson<List<Posts>>(optionValuesString, type)
     }
 }

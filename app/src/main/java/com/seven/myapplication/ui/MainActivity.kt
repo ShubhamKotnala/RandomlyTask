@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity() {
         tvNodata.visibility = GONE
 
         if (Utils.isOnline(this)) {
-            Utils.showSnackBar(findViewById(R.id.main_activity_container), getString(R.string.connected))
             page += 1
             viewModel.callFeedApi(page)
         } else {

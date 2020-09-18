@@ -1,5 +1,7 @@
 package com.seven.myapplication.ui
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -18,12 +20,13 @@ import com.seven.myapplication.adapter.PostsAdapter
 import com.seven.myapplication.database.FeedDatabase
 import com.seven.myapplication.model.FeedResponse
 import com.seven.myapplication.model.Posts
+import com.seven.myapplication.utils.ConnectivityReceiver
 import com.seven.myapplication.utils.Utils
 import com.seven.myapplication.viewmodel.MainViewModel
 import com.yarolegovich.lovelydialog.LovelyChoiceDialog
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ConnectivityReceiver.ConnectivityReceiverListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var progressbar: ProgressBar
@@ -77,6 +80,16 @@ class MainActivity : AppCompatActivity() {
 
         imgSort.setOnClickListener { showSortDialog() }
         callFeedApi();
+        registerReceiver(ConnectivityReceiver(), IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+    }
+
+    override fun onResume() {
+        super.onResume()
+        ConnectivityReceiver.connectivityReceiverListener = this
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     private fun callFeedApi() {
@@ -88,6 +101,8 @@ class MainActivity : AppCompatActivity() {
             viewModel.callFeedApi(page)
         } else {
             Utils.showSnackBar(findViewById(R.id.main_activity_container), getString(R.string.you_are_offline))
+            page = 3
+            listPosts.clear()
             viewModel.getSavedData()
         }
     }
@@ -106,6 +121,13 @@ class MainActivity : AppCompatActivity() {
                 postsAdapter.setData(listPosts)
             }
             .show()
+    }
+
+    override fun onNetworkConnectionChanged(isConnected: Boolean) {
+        if (!isConnected)
+            Utils.showSnackBar(findViewById(R.id.main_activity_container),getString(R.string.you_are_offline))
+        else
+            Utils.showSnackBar(findViewById(R.id.main_activity_container),getString(R.string.you_are_connected))
     }
 
     private fun setCouponsAdapter(list: List<Posts>) {
@@ -127,7 +149,8 @@ class MainActivity : AppCompatActivity() {
         rvCoupons.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE && page < 3) {
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE && page < 3
+                    && Utils.isOnline(applicationContext)) {
                    callFeedApi()
                 }
             }

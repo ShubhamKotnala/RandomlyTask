@@ -11,4 +11,5 @@
     <string name="shares">Shares</string>
     <string name="views">Views</string>
     <string name="dialog_subtitle">Please select an option to sort</string>
+    <string name="you_are_connected">You are connected</string>
 </resources>

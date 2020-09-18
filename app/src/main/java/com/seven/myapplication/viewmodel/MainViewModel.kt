@@ -1,5 +1,6 @@
 package com.seven.myapplication.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -30,6 +31,7 @@ class MainViewModel : ViewModel() {
          viewModelScope.launch {
             val response = apiClient!!.getFeeds(APIConfig.getUrl(page))
              data.postValue(response)
+             Log.d("NETWORK", response.toString())
              saveDataIntoDb(response)
          }
     }

@@ -17,7 +17,7 @@ class MainViewModel : ViewModel() {
 
     private val apiClient = APIConfig.instance?.create(APIClient::class.java)
     private val compositeDisposable = CompositeDisposable()
-    private var dataBaseInstance: FeedDatabase ?= null
+    private var dataBaseInstance: FeedDatabase? = null
 
     val data = MutableLiveData<FeedResponse>()
     val offlineDataList = MutableLiveData<List<Posts>>()
@@ -28,7 +28,7 @@ class MainViewModel : ViewModel() {
 
      fun callFeedApi(page: Int) {
          viewModelScope.launch {
-            val response = apiClient!!.getFeeds(page)
+            val response = apiClient!!.getFeeds(APIConfig.getUrl(page))
              data.postValue(response)
              saveDataIntoDb(response)
          }

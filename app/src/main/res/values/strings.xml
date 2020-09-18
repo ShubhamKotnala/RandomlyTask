@@ -10,4 +10,5 @@
     <string name="likes">Likes</string>
     <string name="shares">Shares</string>
     <string name="views">Views</string>
+    <string name="dialog_subtitle">Please select an option to sort</string>
 </resources>

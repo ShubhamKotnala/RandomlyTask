@@ -3,7 +3,10 @@ package com.seven.myapplication.ui
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.*
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -19,6 +22,7 @@ import com.seven.myapplication.utils.Utils
 import com.seven.myapplication.viewmodel.MainViewModel
 import com.yarolegovich.lovelydialog.LovelyChoiceDialog
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
@@ -28,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imgSort : ImageView
     private lateinit var rvCoupons: RecyclerView
     private lateinit var postsAdapter: PostsAdapter
+    private var page : Int = 0
     private var listPosts: ArrayList<Posts> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         imgSort.setOnClickListener { showSortDialog() }
+        callFeedApi();
     }
 
     private fun callFeedApi() {
@@ -79,16 +85,12 @@ class MainActivity : AppCompatActivity() {
 
         if (Utils.isOnline(this)) {
             Utils.showSnackBar(findViewById(R.id.main_activity_container), getString(R.string.connected))
-            viewModel.callFeedApi(1)
+            page += 1
+            viewModel.callFeedApi(page)
         } else {
             Utils.showSnackBar(findViewById(R.id.main_activity_container), getString(R.string.you_are_offline))
             viewModel.getSavedData()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        callFeedApi();
     }
 
     private fun showSortDialog() {
@@ -96,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
         LovelyChoiceDialog(this)
             .setTopColorRes(R.color.colorPrimary)
-            .setTitle("Please select an option to sort")
+            .setTitle(getString(R.string.dialog_subtitle))
             .setIcon(R.drawable.ic_sort)
             .setItems(list
             ) { _, item ->
@@ -108,7 +110,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setCouponsAdapter(list: List<Posts>) {
-        listPosts.clear()
+        if (listPosts.isNotEmpty()) {
+            listPosts.addAll(list)
+            postsAdapter.notifyDataSetChanged()
+            return
+        }
+
         listPosts.addAll(list)
 
         postsAdapter = PostsAdapter(listPosts)
@@ -116,6 +123,16 @@ class MainActivity : AppCompatActivity() {
         val manager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvCoupons.layoutManager = manager
         rvCoupons.adapter = postsAdapter
+        rvCoupons.clearOnScrollListeners()
+
+        rvCoupons.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE && page < 3) {
+                   callFeedApi()
+                }
+            }
+        })
     }
 
     private fun setProgressBarVisiblity(boolean: Boolean) {
